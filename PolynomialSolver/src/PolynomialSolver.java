@@ -4,83 +4,36 @@ import java.text.*;
 import java.math.*;
 import java.util.regex.*;
 
-class SLNode<T> {
-    private T element;
-    private SLNode<T> next;
-
-    /**
-     * Node constructor
-     * @param e
-     * @param n
-     */
-    public SLNode(T e, SLNode<T> n)
-    {
-        element = e;
-        next = n;
-    }
-
-    /* Getters */
-    /**
-     * gets node data
-     * @return node data
-     */
-    public T getElement()
-    {
-        return element;
-    }
-    /**
-     * gets next node
-     * @return next node
-     */
-    public SLNode<T> getNext()
-    {
-        return next;
-    }
-
-    /* Setters */
-    /**
-     * sets node's data
-     * @param newElement
-     */
-    public void setElement(T newElement)
-    {
-        element = newElement;
-    }
-    /**
-     * sets node's next node
-     * @param newNext
-     */
-    public void setNext(SLNode<T> newNext)
-    {
-        next = newNext;
-    }
-}
-
-interface ILinkedList<T> {
+interface ILinkedList {
 /**
 * Inserts a specified element at the specified position in the list.
 * @param index
 * @param element
 */
-public void add(int index, T element);
+public void add(int index, Object element);
 /**
 * Inserts the specified element at the end of the list.
 * @param element
 */
-public void add(T element);
+public void add(Object element);
 /**
 * @param index
 * @return the element at the specified position in this list.
 */
-public T get(int index);
-
+public Object get(int index);
+/**
+ * 
+ * @param index
+ * @return the node at the specified position in this list.
+ */
+public SLNode getNode(int index);
 /**
 * Replaces the element at the specified position in this list with the
 * specified element.
 * @param index
 * @param element
 */
-public void set(int index, T element);
+public void set(int index, Object element);
 /**
 * Removes all of the elements from this list.
 */
@@ -103,274 +56,12 @@ public int size();
 * @param toIndex
 * @return a view of the portion of this list between the specified fromIndex and toIndex, inclusively.
 */
-public ILinkedList<T> sublist(int fromIndex, int toIndex);
+public ILinkedList sublist(int fromIndex, int toIndex);
 /**
 * @param o
 * @return true if this list contains an element with the same value as the specified element.
 */
-public boolean contains(T element);
-}
-
-class SingleLinkedList<T> implements ILinkedList<T> {
-    private SLNode<T> head;
-
-    SingleLinkedList() {
-        this.head = null;
-    }
-
-    public void add(int index, T element)
-    {
-        if (index < 0 || index > size())
-        {
-            System.out.println("Error");
-            return;
-        }
-
-        SLNode<T> newNode = new SLNode<>(element, null);
-        if (index == 0)
-        {
-            newNode.setNext(head);
-            head = newNode;
-        }
-        else
-        {
-            SLNode<T> currNode = head;
-            for (int i = 0; i < index - 1; ++i)
-            {
-                currNode = currNode.getNext();
-            }
-            newNode.setNext(currNode.getNext());
-            currNode.setNext(newNode);
-        }
-    }
-    
-    public void add(T element)
-    {
-        SLNode<T> newNode = new SLNode<>(element, null);
-        if(head == null)
-        {
-            head = newNode;
-        }
-        else
-        {
-            SLNode<T> currNode = head;
-            while (currNode.getNext() != null)
-            {
-                currNode = currNode.getNext();
-            }
-            currNode.setNext(newNode);
-        }
-    }
-    
-    public T get(int index)
-    {
-        if (index < 0 || index >= size())
-        {
-            // System.out.println("Error");
-            return null;
-        }
-        SLNode<T> currNode = head;
-        for (int i = 0; i < index; ++i)
-        {
-            currNode = currNode.getNext();
-        }
-        return currNode.getElement();
-    }
-
-    public void set(int index, T element)
-    {
-        if (index < 0 || index >= size())
-        {
-            // System.out.println("Error");
-            return;
-        }
-
-        SLNode<T> currNode = head;
-        for( int i = 0; i < index; ++i)
-        {
-            currNode = currNode.getNext();
-        }
-        currNode.setElement(element);
-    }
-    
-    public void clear()
-    {
-        head = null;
-    }
-    
-    public boolean isEmpty()
-    {
-        return head == null;
-    }
-    
-    public void remove(int index)
-    {
-        if (index < 0 || index >= size())
-        {
-            // System.out.println("Error");
-            return;
-        }
-        if (index == 0)
-        {
-            head = head.getNext();
-        }
-        else
-        {
-            SLNode<T> currNode = head;
-            for (int i = 0; i < index - 1; ++i) {
-                currNode = currNode.getNext();
-            }
-            currNode.setNext(currNode.getNext().getNext());
-        }
-    }
-    
-    public int size()
-    {
-        int length = 0;
-        SLNode<T> currNode = head;
-        while (currNode != null) {
-            length++;
-            currNode = currNode.getNext();
-        }
-        return length;
-    }
-    
-    public SingleLinkedList<T> sublist(int fromIndex, int toIndex)
-    {
-        if (fromIndex < 0 || fromIndex >= size() || toIndex < 0 || toIndex >= size() || fromIndex > toIndex)
-        {
-            // System.out.println("Error");
-            return null;
-        }
-        SingleLinkedList<T> subList = new SingleLinkedList<>();
-        SLNode<T> currNode = head;
-        for (int i = 0; i <= toIndex; ++i)
-        {
-            if (i >= fromIndex)
-            {
-                subList.add(currNode.getElement());
-            }
-            currNode = currNode.getNext();
-        }
-
-        return subList;
-    }
-    
-    public boolean contains(T element)
-    {
-        SLNode<T> currNode = head;
-        while (currNode != null)
-        {
-            if (currNode.getElement() == element)
-            {
-                return true;
-            }
-            currNode = currNode.getNext();
-        }
-        return false;
-    }
-
-    public void printList()
-    {
-        System.out.print("[");
-        SLNode<T> currNode = head;
-        // if (head == null) return;
-        for(int i = 0; i < size(); ++i) {
-            System.out.print(currNode.getElement());
-            currNode = currNode.getNext();
-            if(i != size() - 1)
-                System.out.print(", ");
-        }
-        System.out.println("]");
-    }
-}
-
-class MapEntry<K, V> {
-    private K key;
-    private V value;
-
-    public MapEntry(K key, V value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public K getKey() {
-        return key;
-    }
-
-    public V getValue() {
-        return value;
-    }
-
-    public void setValue(V value) {
-        this.value = value;
-    }
-}
-
-class Map<K, V> {
-    private SingleLinkedList<MapEntry<K, V>> entries;
-
-    public Map() {
-        entries = new SingleLinkedList<>();
-    }
-
-    public void put(K key, V value) {
-        for (int i = 0; i < entries.size(); ++i) {
-            MapEntry<K, V> entry = entries.get(i);
-            if (entry.getKey() == key) {
-                entry.setValue(value);
-                return;
-            }
-        }
-        entries.add(new MapEntry<>(key, value));
-    }
-
-    public V get(K key) {
-        for (int i = 0; i < entries.size(); ++i) {
-            MapEntry<K, V> entry = entries.get(i);
-            if (entry.getKey() == key) {
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
-
-    public boolean containsKey(K key) {
-        for (int i = 0; i < entries.size(); ++i) {
-            MapEntry<K, V> entry = entries.get(i);
-            if (entry.getKey() == key) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void remove(K key) {
-        for (int i = 0; i < entries.size(); ++i) {
-            MapEntry<K, V> entry = entries.get(i);
-            if (entry.getKey() == key) {
-                entries.remove(i);
-                return;
-            }
-        }
-    }
-
-    public boolean isEmpty() {
-        return entries.isEmpty();
-    }
-
-    public int size() {
-        return entries.size();
-    }
-
-    public void clear() {
-        entries.clear();
-    }
-
-    public void printEntries()
-    {
-        entries.printList();
-    }
+public boolean contains(Object o);
 }
 
 interface IPolynomialSolver {
@@ -426,58 +117,372 @@ interface IPolynomialSolver {
     int[][] multiply(char poly1, char poly2);
 }
 
+class SLNode {
+    private Object element;
+    private SLNode next;
 
-public class PolynomialSolver implements IPolynomialSolver{
-    private Map<Character, int[][]> polynomials;
-
-    PolynomialSolver() {
-        polynomials = new Map<>();
-    }
-    public void setPolynomial(char poly, int[][] terms)
+    /**
+     * Node constructor
+     * @param e
+     * @param n
+     */
+    public SLNode(Object e, SLNode n)
     {
-        if (terms == null)
+        this.element = e;
+        this.next = n;
+    }
+
+    /* Getters */
+    /**
+     * gets node data
+     * @return node data
+     */
+    public Object getElement()
+    {
+        return element;
+    }
+    /**
+     * gets next node
+     * @return next node
+     */
+    public SLNode getNext()
+    {
+        return next;
+    }
+
+    /* Setters */
+    /**
+     * sets node's data
+     * @param newElement
+     */
+    public void setElement(Object newElement)
+    {
+        this.element = newElement;
+    }
+    /**
+     * sets node's next node
+     * @param newNext
+     */
+    public void setNext(SLNode newNext)
+    {
+        this.next = newNext;
+    }
+}
+
+class SingleLinkedList implements ILinkedList {
+    private SLNode head;
+
+    SingleLinkedList() {
+        this.head = null;
+    }
+
+    public void add(int index, Object element)
+    {
+        if (index < 0 || index > size())
         {
             System.out.println("Error");
             return;
         }
-        polynomials.put(poly, terms);
+
+        SLNode newNode = new SLNode(element, null);
+        if (index == 0)
+        {
+            newNode.setNext(head);
+            head = newNode;
+        }
+        else
+        {
+            SLNode currNode = head;
+            for (int i = 0; i < index - 1; ++i)
+            {
+                currNode = currNode.getNext();
+            }
+            newNode.setNext(currNode.getNext());
+            currNode.setNext(newNode);
+        }
     }
-    public String print(char poly)
+    
+    public void add(Object element)
     {
-        if (!polynomials.containsKey(poly))
+        SLNode newNode = new SLNode(element, null);
+        if(head == null)
+        {
+            head = newNode;
+        }
+        else
+        {
+            SLNode currNode = head;
+            while (currNode.getNext() != null)
+            {
+                currNode = currNode.getNext();
+            }
+            currNode.setNext(newNode);
+        }
+    }
+    
+    public Object get(int index)
+    {
+        if (index < 0 || index >= size())
+        {
+            System.out.println("Error");
+            return null;
+        }
+        SLNode currNode = head;
+        for (int i = 0; i < index; ++i)
+        {
+            currNode = currNode.getNext();
+        }
+        return currNode.getElement();
+    }
+
+    public SLNode getNode(int index)
+    {
+        if (index < 0 || index >= size())
+        {
+            return null;
+        }
+        SLNode currNode = head;
+        for (int i = 0; i < index; ++i)
+        {
+            currNode = currNode.getNext();
+        }
+        return currNode;
+    }
+
+    public void set(int index, Object element)
+    {
+        if (index < 0 || index >= size())
+        {
+            System.out.println("Error");
+            return;
+        }
+
+        SLNode currNode = head;
+        for( int i = 0; i < index; ++i)
+        {
+            currNode = currNode.getNext();
+        }
+        currNode.setElement(element);
+    }
+    
+    public void clear()
+    {
+        head = null;
+    }
+    
+    public boolean isEmpty()
+    {
+        return head == null;
+    }
+    
+    public void remove(int index)
+    {
+        if (index < 0 || index >= size())
+        {
+            System.out.println("Error");
+            return;
+        }
+        if (index == 0)
+        {
+            head = head.getNext();
+        }
+        else
+        {
+            SLNode currNode = head;
+            for (int i = 0; i < index - 1; i++) {
+                currNode = currNode.getNext();
+            }
+            currNode.setNext(currNode.getNext().getNext());
+        }
+    }
+    
+    public int size()
+    {
+        int length = 0;
+        SLNode currNode = head;
+        while (currNode != null) {
+            length++;
+            currNode = currNode.getNext();
+        }
+        return length;
+    }
+    
+    public SingleLinkedList sublist(int fromIndex, int toIndex)
+    {
+        if (fromIndex < 0 || fromIndex >= size() || toIndex < 0 || toIndex >= size() || fromIndex > toIndex)
+        {
+            System.out.println("Error");
+            return null;
+        }
+        SingleLinkedList subList = new SingleLinkedList();
+        SLNode currNode = head;
+        for (int i = 0; i <= toIndex; ++i)
+        {
+            if (i >= fromIndex)
+            {
+                subList.add(currNode.getElement());
+            }
+            currNode = currNode.getNext();
+        }
+
+        return subList;
+    }
+    
+    public boolean contains(Object o)
+    {
+        SLNode currNode = head;
+        while (currNode != null)
+        {
+            if (currNode.getElement() == o)
+            {
+                return true;
+            }
+            currNode = currNode.getNext();
+        }
+        return false;
+    }
+
+    public void printList()
+    {
+        System.out.print("[");
+        SLNode currNode = head;
+        // if (head == null) return;
+        for(int i = 0; i < size(); ++i) {
+            System.out.print(currNode.getElement());
+            currNode = currNode.getNext();
+            if(i != size() - 1)
+                System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+}
+
+
+class  term {
+    private int coefficient;
+    private int exponent;
+
+    term (int c, int e)
+    {
+        this.coefficient = c;
+        this.exponent = e;
+    }
+
+    /* Getters */
+    /**
+     * gets term coefficient
+     * @return term coefficient
+     */
+    public int getCoefficient()
+    {
+        return this.coefficient;
+    }
+    /**
+     * gets term exponent
+     * @return term exponent
+     */
+    public int getExponent()
+    {
+        return this.exponent;
+    }
+
+    /* Setters */
+    /**
+     * sets term coefficient
+     * @param newCoefficient
+     */
+    public void setElement(int newCoefficient)
+    {
+        this.coefficient = newCoefficient;
+    }
+    /**
+     * sets term exponent
+     * @param newExponent
+     */
+    public void setNext(int newExponent)
+    {
+        this.exponent = newExponent;
+    }
+}
+
+public class PolynomialSolver implements IPolynomialSolver{
+    SingleLinkedList polynomialA;
+    SingleLinkedList polynomialB;
+    SingleLinkedList polynomialC;
+    SingleLinkedList polynomialR;
+
+    PolynomialSolver()
+    {
+        polynomialA = new SingleLinkedList();
+        polynomialB = new SingleLinkedList();
+        polynomialC = new SingleLinkedList();
+        polynomialR = new SingleLinkedList();
+    }
+
+    private SingleLinkedList selectPolynomial(char poly)
+    {
+        SingleLinkedList polynomial = null;
+        switch (poly) {
+            case 'A':
+                polynomial = polynomialA;
+                break;
+            case 'B':
+                polynomial = polynomialB;
+                break;
+            case 'C':
+                polynomial = polynomialC;
+                break;
+        
+            default:
+                // System.out.println("Error");
+                break;
+        }
+        return polynomial;
+    }
+
+    private String printResult()
+    {
+        SingleLinkedList polynomial = polynomialR;
+        StringBuilder result = new StringBuilder();
+        term t;
+        if (polynomial == null || polynomial.isEmpty())
         {
             return "Error";
         }
-        int[][] polynomial = polynomials.get(poly);
-        StringBuilder result = new StringBuilder();
-
-        for (int i = 0; i < polynomial.length; ++i)
+        else
         {
-            int coefficient = polynomial[i][0];
-            int exponent = polynomial[i][1];
-
-            if (i > 0 && coefficient > 0)
+            for (int i = 0; i < polynomial.size(); ++i)
             {
-                result.append("+");
-            }
-
-            if (coefficient != 0)
-            {
-                if (coefficient != 1 && coefficient != - 1)
+                t = (term)polynomial.getNode(i).getElement();
+                int coefficient = t.getCoefficient();
+                int exponent = t.getExponent();
+                if (i > 0 && coefficient > 0)
                 {
-                    result.append(coefficient);
-                }
-                else if (coefficient == -1)
-                {
-                    result.append("-");
+                    result.append("+");
                 }
 
-                if(exponent != 0)
+                if (coefficient != 0)
                 {
-                    result.append("x");
-                    if (exponent != 1)
+                    if (coefficient != 1 && coefficient != - 1)
                     {
-                        result.append("^").append(exponent);
+                        result.append(coefficient);
+                    }
+                    else if (coefficient == -1)
+                    {
+                        result.append("-");
+                    }
+
+                    if(exponent != 0)
+                    {
+                        result.append("x");
+                        if (exponent != 1)
+                        {
+                            result.append("^").append(exponent);
+                        }
+                    }
+                    else if(exponent == 0 && coefficient == 1)
+                    {
+                        result.append(coefficient);
                     }
                 }
             }
@@ -488,202 +493,299 @@ public class PolynomialSolver implements IPolynomialSolver{
         }
         return result.toString();
     }
+
+    private int[][] toTerms(SingleLinkedList polynomial)
+    {
+        int[][] terms = new int[polynomial.size()][2];
+        try {
+            term t;
+            int i = 0;
+            while (i < polynomial.size()) {
+                t = (term) polynomial.getNode(i).getElement();
+                terms[i][0] = t.getCoefficient();
+                terms[i][1] = t.getExponent();
+                ++i;
+            }
+        } catch (Exception e) {
+            System.out.println("Error");
+        }
+        return terms;
+    }
+
+    public void setPolynomial(char poly, int[][] terms)
+    {
+        SingleLinkedList polynomial = selectPolynomial(poly);
+        try {
+            polynomial.clear();
+            for (int[] tData : terms)
+            {
+                term t = new term(tData[0], tData[1]);
+                polynomial.add(t);
+            }
+        } catch (Exception e) {
+            System.out.println("Error");
+        }
+    }
+
+    public String print(char poly)
+    {
+        SingleLinkedList polynomial;
+        if (poly == 'R') polynomial = polynomialR;
+        else polynomial = selectPolynomial(poly);
+        StringBuilder result = new StringBuilder();
+        term t;
+        if (polynomial == null || polynomial.isEmpty())
+        {
+            return "Error";
+        }
+        else
+        {
+            for (int i = 0; i < polynomial.size(); ++i)
+            {
+                t = (term)polynomial.getNode(i).getElement();
+                int coefficient = t.getCoefficient();
+                int exponent = t.getExponent();
+                if (i > 0 && coefficient > 0)
+                {
+                    result.append("+");
+                }
+
+                if (coefficient != 0)
+                {
+                    if (coefficient != 1 && coefficient != - 1)
+                    {
+                        result.append(coefficient);
+                    }
+                    else if (coefficient == -1)
+                    {
+                        result.append("-");
+                    }
+
+                    if(exponent != 0)
+                    {
+                        result.append("x");
+                        if (exponent != 1)
+                        {
+                            result.append("^").append(exponent);
+                        }
+                    }
+                    else if(exponent == 0 && coefficient == 1)
+                    {
+                        result.append(coefficient);
+                    }
+                }
+            }
+        }
+        if (result.length() == 0)
+        {
+            result.append("0");
+        }
+        return result.toString();
+    }
+
     public void clearPolynomial(char poly)
     {
-        if (!polynomials.containsKey(poly))
+        SingleLinkedList polynomial = selectPolynomial(poly);
+        if (polynomial.isEmpty())
         {
             System.out.println("Error");
             return;
         }
-        polynomials.remove(poly);
-        printCoefficient(poly);
+        polynomial.clear();
+        polynomial.printList();
     }
+
     public float evaluatePolynomial(char poly, float value)
     {
-        if (!polynomials.containsKey(poly))
+        SingleLinkedList polynomial = selectPolynomial(poly);
+        if (polynomial == null || polynomial.isEmpty())
         {
-            System.out.println("Error");
             return Float.NaN;
         }
-
-        int[][] polynomial = polynomials.get(poly);
+        term t;
         float result = 0;
-        for (int i = 0; i < polynomial.length; ++i)
+        for (int i = 0; i < polynomial.size(); ++i)
         {
-            int coefficient = polynomial[i][0];
-            int exponent = polynomial[i][1];
+            t = (term)polynomial.getNode(i).getElement();
+            int coefficient = t.getCoefficient();
+            int exponent = t.getExponent();
             result += coefficient * Math.pow(value, exponent);
         }
-
         return result;
     }
+
     public int[][] add(char poly1, char poly2)
     {
-        if (!polynomials.containsKey(poly1) || !polynomials.containsKey(poly2))
-        {
-            System.out.println("Error");
-            return null;
-        }
-        int[][] polynomial1 = polynomials.get(poly1);
-        int[][] polynomial2 = polynomials.get(poly2);
-        int[][] result = new int[Math.max(polynomial1.length, polynomial2.length)][2];
-
-        int i = 0, j = 0, k = 0;
-        while (k < result.length)
-        {
-            if(i < polynomial1.length && j < polynomial2.length)
+        SingleLinkedList polynomial1 = selectPolynomial(poly1);
+        SingleLinkedList polynomial2 = selectPolynomial(poly2);
+        try {
+            int i = 0;
+            int j = 0;
+            term t1;
+            term t2;
+            while (i < polynomial1.size() && j < polynomial2.size())
             {
-                if ((polynomial1[i][1] == polynomial2[j][1]))
-                {
-                    int coefficient = polynomial1[i][0] + polynomial2[j][0];
-                    int exponent = polynomial1[i][1];
+                t1 = (term)polynomial1.getNode(i).getElement();
+                t2 = (term)polynomial2.getNode(j).getElement();
 
-                    result[k][0] = coefficient;
-                    result[k][1] = exponent;
-                    ++k;
+                if (t1.getExponent() == t2.getExponent())
+                {
+                    polynomialR.add(new term(t1.getCoefficient() + t2.getCoefficient(), t1.getExponent()));
                     ++i;
                     ++j;
                 }
-                else if(polynomial1[i][1] > polynomial2[j][1])
+                else if (t1.getExponent() > t2.getExponent())
                 {
-                    result[k][0] = polynomial1[i][0];
-                    result[k][1] = polynomial1[i][1];;
-                    ++k;
+                    polynomialR.add(new term(t1.getCoefficient(), t1.getExponent()));
                     ++i;
                 }
                 else
                 {
-                    result[k][0] = polynomial2[j][0];
-                    result[k][1] = polynomial2[j][1];;
-                    ++k;
+                    polynomialR.add(new term(t2.getCoefficient(), t2.getExponent()));
                     ++j;
                 }
+                //System.out.println(polynomial1.getNode(i));
+                //System.out.println(polynomial2.getNode(j));
+                if (polynomial1.getNode(i) == null)
+                {
+                    while (polynomial2.getNode(j) != null)
+                    {
+                        t2 = (term)polynomial2.getNode(j).getElement();
+                        polynomialR.add(new term(t2.getCoefficient(), t2.getExponent()));
+                        ++j;
+                    }
+                }
+                if (polynomial2.getNode(j) == null)
+                {
+                    while (polynomial1.getNode(i) != null)
+                    {
+                        t1 = (term)polynomial1.getNode(i).getElement();
+                        polynomialR.add(new term(t1.getCoefficient(), t1.getExponent()));
+                        ++i;
+                    }
+                }
             }
-            else if (j >= polynomial2.length)
-            {
-                result[k][0] = polynomial1[i][0];
-                result[k][1] = polynomial1[i][1];;
-                ++k;
-                ++i;
-            }
-            else
-            {
-                result[k][0] = polynomial1[j][0];
-                result[k][1] = polynomial1[j][1];;
-                ++k;
-                ++j;
-            }
-            
+            System.out.println(printResult());
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println("Error");
         }
-        polynomials.put('R', result);
-        return result;
+        return toTerms(polynomialR);
     }
+
     public int[][] subtract(char poly1, char poly2)
     {
-        if (!polynomials.containsKey(poly1) || !polynomials.containsKey(poly2))
-        {
-            System.out.println("Error");
-            return null;
-        }
-        int[][] polynomial1 = polynomials.get(poly1);
-        int[][] polynomial2 = polynomials.get(poly2);
-        int[][] result = new int[Math.max(polynomial1.length, polynomial2.length)][2];
-
-        int i = 0, j = 0, k = 0;
-        while (k < result.length)
-        {
-            if(i < polynomial1.length && j < polynomial2.length)
+        SingleLinkedList polynomial1 = selectPolynomial(poly1);
+        SingleLinkedList polynomial2 = selectPolynomial(poly2);
+        try {
+            int i = 0;
+            int j = 0;
+            term t1;
+            term t2;
+            while (i < polynomial1.size() && j < polynomial2.size())
             {
-                if ((polynomial1[i][1] == polynomial2[j][1]))
-                {
-                    int coefficient = polynomial1[i][0] - polynomial2[j][0];
-                    int exponent = polynomial1[i][1];
+                t1 = (term)polynomial1.getNode(i).getElement();
+                t2 = (term)polynomial2.getNode(j).getElement();
 
-                    result[k][0] = coefficient;
-                    result[k][1] = exponent;
-                    ++k;
+                if (t1.getExponent() == t2.getExponent())
+                {
+                    polynomialR.add(new term(t1.getCoefficient() - t2.getCoefficient(), t1.getExponent()));
                     ++i;
                     ++j;
                 }
-                else if(polynomial1[i][1] > polynomial2[j][1])
+                else if (t1.getExponent() > t2.getExponent())
                 {
-                    result[k][0] = polynomial1[i][0];
-                    result[k][1] = polynomial1[i][1];;
-                    ++k;
+                    polynomialR.add(new term(t1.getCoefficient(), t1.getExponent()));
                     ++i;
                 }
                 else
                 {
-                    result[k][0] = -polynomial2[j][0];
-                    result[k][1] = polynomial2[j][1];;
-                    ++k;
+                    polynomialR.add(new term(-t2.getCoefficient(), t2.getExponent()));
                     ++j;
                 }
+
+                if (polynomial1.getNode(i) == null)
+                {
+                    while (polynomial2.getNode(j) != null)
+                    {
+                        t2 = (term)polynomial2.getNode(j).getElement();
+                        polynomialR.add(new term(-t2.getCoefficient(), t2.getExponent()));
+                        ++j;
+                    }
+                }
+                if (polynomial2.getNode(j) == null)
+                {
+                    while (polynomial1.getNode(i) != null)
+                    {
+                        t1 = (term)polynomial1.getNode(i).getElement();
+                        polynomialR.add(new term(t1.getCoefficient(), t1.getExponent()));
+                        ++i;
+                    }
+                }
             }
-            else if (j >= polynomial2.length)
+            System.out.println(printResult());
+        } catch (Exception e) {
+            System.err.println("Error");
+        }
+        return toTerms(polynomialR);
+    }
+
+    public int[][] multiply(char poly1, char poly2)
+    {
+        SingleLinkedList polynomial1 = selectPolynomial(poly1);
+        SingleLinkedList polynomial2 = selectPolynomial(poly2);
+        term t1;
+        term t2;
+        term temp;
+        int i = 0;
+        int j = 0;
+        int maxExponent = 0;
+        int k = 0;
+        try {
+            if(!polynomial1.isEmpty() && !polynomial2.isEmpty())
             {
-                result[k][0] = polynomial1[i][0];
-                result[k][1] = polynomial1[i][1];;
-                ++k;
-                ++i;
+                t1 = (term) polynomial1.getNode(i).getElement();
+                t2 = (term) polynomial2.getNode(j).getElement();
+                maxExponent = t1.getExponent() + t2.getExponent();
             }
             else
             {
-                result[k][0] = -polynomial1[j][0];
-                result[k][1] = polynomial1[j][1];;
-                ++k;
-                ++j;
+                System.out.println("Error");
+                System.exit(0);
             }
-            
-        }
-        polynomials.put('R', result);
-        return result;
-    }
-    public int[][] multiply(char poly1, char poly2)
-    {
-        if (!polynomials.containsKey(poly1) || !polynomials.containsKey(poly2))
-        {
-            System.out.println("Error");
-            return null;
-        }
-        int[][] polynomial1 = polynomials.get(poly1);
-        int[][] polynomial2 = polynomials.get(poly2);
-        int[][] result = new int[polynomial1.length + polynomial2.length - 1][2];
 
-        for (int i = 0; i < result.length; ++i)  
-        { 
-            result[i][0] = 0;
-            result[i][1] = result.length - i - 1;
-        }
-
-        for (int i = 0; i < polynomial1.length; ++i)  
-        { 
-            for (int j = 0; j < polynomial2.length; ++j)  
-            { 
-                result[i + j][0] += polynomial1[i][0] * polynomial2[j][0]; 
-            } 
-        }
-        
-        polynomials.put('R', result);
-        return result;
-    }
-    private void printCoefficient(char poly)
-    {
-        System.out.print("[");
-        int[][] polynomial = polynomials.get(poly);
-
-        if(polynomial != null)
-        {
-            for (int i = 0; i < polynomial.length; ++i)
+            for (k = 0; k <= maxExponent; ++k)
             {
-                int coefficient = polynomial[i][0];
-                System.out.print(coefficient);
-                if(i != polynomial.length - 1)
-                System.out.print(", ");
+                polynomialR.add(new term(0, maxExponent - k));
             }
+            k = 0;
+            while (k < polynomialR.size()) {
+                temp = (term) polynomialR.getNode(k).getElement();
+                int coeff = 0;
+                while (i < polynomial1.size()) {
+                    t1 = (term) polynomial1.getNode(i).getElement();
+                    while (j < polynomial2.size()) {
+                        t2 = (term) polynomial2.getNode(j).getElement();
+                        if (temp.getExponent() == t1.getExponent() + t2.getExponent())
+                        {
+                            coeff += t1.getCoefficient() * t2.getCoefficient();
+                        }
+                        ++j;
+                    }
+                    j = 0;
+                    ++i;
+                }
+                i = 0;
+                polynomialR.set(k, new term(coeff, temp.getExponent()));
+                ++k;
+            }
+            System.out.println(printResult());
+        } catch (Exception e) {
+            System.err.println("Error");
         }
-        System.out.println("]");
+        return toTerms(polynomialR);
     }
+
     public static void main(String[] args) {
         try (Scanner sc = new Scanner(System.in)) {
             PolynomialSolver PS = new PolynomialSolver();
@@ -735,22 +837,16 @@ public class PolynomialSolver implements IPolynomialSolver{
                         poly1 = sc.nextLine().charAt(0);
                         poly2 = sc.nextLine().charAt(0);
                         r = PS.add(poly1, poly2);
-                        if(r == null) break;
-                        System.out.println(PS.print('R'));
                         break;
                     case "sub":
                         poly1 = sc.nextLine().charAt(0);
                         poly2 = sc.nextLine().charAt(0);
                         r = PS.subtract(poly1, poly2);
-                        if(r == null) break;
-                        System.out.println(PS.print('R'));
                         break;
                     case "mult":
                         poly1 = sc.nextLine().charAt(0);
                         poly2 = sc.nextLine().charAt(0);
                         r = PS.multiply(poly1, poly2);
-                        if(r == null) break;
-                        System.out.println(PS.print('R'));
                         break;
                     case "clear":
                         poly1 = sc.nextLine().charAt(0);
