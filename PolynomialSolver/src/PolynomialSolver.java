@@ -135,7 +135,7 @@ class SLNode {
      */
     public Object getElement()
     {
-        return element;
+        return this.element;
     }
     /**
      * gets next node
@@ -143,7 +143,7 @@ class SLNode {
      */
     public SLNode getNext()
     {
-        return next;
+        return this.next;
     }
 
     /* Setters */
@@ -184,12 +184,12 @@ class SingleLinkedList implements ILinkedList {
         SLNode newNode = new SLNode(element, null);
         if (index == 0)
         {
-            newNode.setNext(head);
-            head = newNode;
+            newNode.setNext(this.head);
+            this.head = newNode;
         }
         else
         {
-            SLNode currNode = head;
+            SLNode currNode = this.head;
             for (int i = 0; i < index - 1; ++i)
             {
                 currNode = currNode.getNext();
@@ -202,13 +202,13 @@ class SingleLinkedList implements ILinkedList {
     public void add(Object element)
     {
         SLNode newNode = new SLNode(element, null);
-        if(head == null)
+        if(this.head == null)
         {
-            head = newNode;
+            this.head = newNode;
         }
         else
         {
-            SLNode currNode = head;
+            SLNode currNode = this.head;
             while (currNode.getNext() != null)
             {
                 currNode = currNode.getNext();
@@ -225,7 +225,7 @@ class SingleLinkedList implements ILinkedList {
             System.exit(0);
             return null;
         }
-        SLNode currNode = head;
+        SLNode currNode = this.head;
         for (int i = 0; i < index; ++i)
         {
             currNode = currNode.getNext();
@@ -239,7 +239,7 @@ class SingleLinkedList implements ILinkedList {
         {
             return null;
         }
-        SLNode currNode = head;
+        SLNode currNode = this.head;
         for (int i = 0; i < index; ++i)
         {
             currNode = currNode.getNext();
@@ -256,7 +256,7 @@ class SingleLinkedList implements ILinkedList {
             return;
         }
 
-        SLNode currNode = head;
+        SLNode currNode = this.head;
         for( int i = 0; i < index; ++i)
         {
             currNode = currNode.getNext();
@@ -266,12 +266,12 @@ class SingleLinkedList implements ILinkedList {
     
     public void clear()
     {
-        head = null;
+        this.head = null;
     }
     
     public boolean isEmpty()
     {
-        return head == null;
+        return this.head == null;
     }
     
     public void remove(int index)
@@ -284,11 +284,11 @@ class SingleLinkedList implements ILinkedList {
         }
         if (index == 0)
         {
-            head = head.getNext();
+            this.head = this.head.getNext();
         }
         else
         {
-            SLNode currNode = head;
+            SLNode currNode = this.head;
             for (int i = 0; i < index - 1; i++) {
                 currNode = currNode.getNext();
             }
@@ -299,7 +299,7 @@ class SingleLinkedList implements ILinkedList {
     public int size()
     {
         int length = 0;
-        SLNode currNode = head;
+        SLNode currNode = this.head;
         while (currNode != null) {
             length++;
             currNode = currNode.getNext();
@@ -316,7 +316,7 @@ class SingleLinkedList implements ILinkedList {
             return null;
         }
         SingleLinkedList subList = new SingleLinkedList();
-        SLNode currNode = head;
+        SLNode currNode = this.head;
         for (int i = 0; i <= toIndex; ++i)
         {
             if (i >= fromIndex)
@@ -331,7 +331,7 @@ class SingleLinkedList implements ILinkedList {
     
     public boolean contains(Object o)
     {
-        SLNode currNode = head;
+        SLNode currNode = this.head;
         while (currNode != null)
         {
             if (currNode.getElement() == o)
@@ -346,8 +346,8 @@ class SingleLinkedList implements ILinkedList {
     public void printList()
     {
         System.out.print("[");
-        SLNode currNode = head;
-        // if (head == null) return;
+        SLNode currNode = this.head;
+        // if (this.head == null) return;
         for(int i = 0; i < size(); ++i) {
             System.out.print(currNode.getElement());
             currNode = currNode.getNext();
@@ -414,10 +414,10 @@ public class PolynomialSolver implements IPolynomialSolver{
 
     PolynomialSolver()
     {
-        polynomialA = new SingleLinkedList();
-        polynomialB = new SingleLinkedList();
-        polynomialC = new SingleLinkedList();
-        polynomialR = new SingleLinkedList();
+        this.polynomialA = new SingleLinkedList();
+        this.polynomialB = new SingleLinkedList();
+        this.polynomialC = new SingleLinkedList();
+        this.polynomialR = new SingleLinkedList();
     }
 
     private SingleLinkedList selectPolynomial(char poly)
@@ -425,13 +425,13 @@ public class PolynomialSolver implements IPolynomialSolver{
         SingleLinkedList polynomial = null;
         switch (poly) {
             case 'A':
-                polynomial = polynomialA;
+                polynomial = this.polynomialA;
                 break;
             case 'B':
-                polynomial = polynomialB;
+                polynomial = this.polynomialB;
                 break;
             case 'C':
-                polynomial = polynomialC;
+                polynomial = this.polynomialC;
                 break;
         
             default:
@@ -487,7 +487,7 @@ public class PolynomialSolver implements IPolynomialSolver{
     SingleLinkedList polynomial;
     SLNode p;
     term t;
-    if (poly == 'R') polynomial = polynomialR;
+    if (poly == 'R') polynomial = this.polynomialR;
     else polynomial = selectPolynomial(poly);
     String res = "";
     if (polynomial == null || polynomial.isEmpty())
@@ -520,7 +520,7 @@ public class PolynomialSolver implements IPolynomialSolver{
     public void clearPolynomial(char poly)
     {
         SingleLinkedList polynomial;
-        if (poly == 'R') polynomial = polynomialR;
+        if (poly == 'R') polynomial = this.polynomialR;
         else polynomial = selectPolynomial(poly);
         if (polynomial.isEmpty())
         {
@@ -535,7 +535,7 @@ public class PolynomialSolver implements IPolynomialSolver{
     public float evaluatePolynomial(char poly, float value)
     {
         SingleLinkedList polynomial;
-        if (poly == 'R') polynomial = polynomialR;
+        if (poly == 'R') polynomial = this.polynomialR;
         else polynomial = selectPolynomial(poly);
         if (polynomial == null || polynomial.isEmpty())
         {
@@ -564,7 +564,7 @@ public class PolynomialSolver implements IPolynomialSolver{
             System.out.println("Error");
             System.exit(0);
         }
-        if (!polynomialR.isEmpty()) polynomialR.clear();
+        if (!this.polynomialR.isEmpty()) this.polynomialR.clear();
         try {
             int i = 0;
             int j = 0;
@@ -577,18 +577,18 @@ public class PolynomialSolver implements IPolynomialSolver{
 
                 if (t1.getExponent() == t2.getExponent())
                 {
-                    polynomialR.add(new term(t1.getCoefficient() + t2.getCoefficient(), t1.getExponent()));
+                    this.polynomialR.add(new term(t1.getCoefficient() + t2.getCoefficient(), t1.getExponent()));
                     ++i;
                     ++j;
                 }
                 else if (t1.getExponent() > t2.getExponent())
                 {
-                    polynomialR.add(new term(t1.getCoefficient(), t1.getExponent()));
+                    this.polynomialR.add(new term(t1.getCoefficient(), t1.getExponent()));
                     ++i;
                 }
                 else
                 {
-                    polynomialR.add(new term(t2.getCoefficient(), t2.getExponent()));
+                    this.polynomialR.add(new term(t2.getCoefficient(), t2.getExponent()));
                     ++j;
                 }
                 if (polynomial1.getNode(i) == null)
@@ -596,7 +596,7 @@ public class PolynomialSolver implements IPolynomialSolver{
                     while (polynomial2.getNode(j) != null)
                     {
                         t2 = (term)polynomial2.getNode(j).getElement();
-                        polynomialR.add(new term(t2.getCoefficient(), t2.getExponent()));
+                        this.polynomialR.add(new term(t2.getCoefficient(), t2.getExponent()));
                         ++j;
                     }
                 }
@@ -605,7 +605,7 @@ public class PolynomialSolver implements IPolynomialSolver{
                     while (polynomial1.getNode(i) != null)
                     {
                         t1 = (term)polynomial1.getNode(i).getElement();
-                        polynomialR.add(new term(t1.getCoefficient(), t1.getExponent()));
+                        this.polynomialR.add(new term(t1.getCoefficient(), t1.getExponent()));
                         ++i;
                     }
                 }
@@ -615,14 +615,14 @@ public class PolynomialSolver implements IPolynomialSolver{
             System.out.println("Error");
             System.exit(0);
         }
-        return toTerms(polynomialR);
+        return toTerms(this.polynomialR);
     }
 
     public int[][] subtract(char poly1, char poly2)
     {
         SingleLinkedList polynomial2 = selectPolynomial(poly2);
         term t;
-        if (!polynomialR.isEmpty()) polynomialR.clear();
+        if (!this.polynomialR.isEmpty()) this.polynomialR.clear();
         for (int i = 0; i < polynomial2.size(); ++i)
         {
             t = (term) polynomial2.getNode(i).getElement();
@@ -635,7 +635,7 @@ public class PolynomialSolver implements IPolynomialSolver{
     {
         SingleLinkedList polynomial1 = selectPolynomial(poly1);
         SingleLinkedList polynomial2 = selectPolynomial(poly2);
-        if (!polynomialR.isEmpty()) polynomialR.clear();
+        if (!this.polynomialR.isEmpty()) this.polynomialR.clear();
         term t1;
         term t2;
         term temp;
@@ -658,11 +658,11 @@ public class PolynomialSolver implements IPolynomialSolver{
 
             for (k = 0; k <= maxExponent; ++k)
             {
-                polynomialR.add(new term(0, maxExponent - k));
+                this.polynomialR.add(new term(0, maxExponent - k));
             }
             k = 0;
-            while (k < polynomialR.size()) {
-                temp = (term) polynomialR.getNode(k).getElement();
+            while (k < this.polynomialR.size()) {
+                temp = (term) this.polynomialR.getNode(k).getElement();
                 int coeff = 0;
                 while (i < polynomial1.size()) {
                     t1 = (term) polynomial1.getNode(i).getElement();
@@ -678,14 +678,14 @@ public class PolynomialSolver implements IPolynomialSolver{
                     ++i;
                 }
                 i = 0;
-                polynomialR.set(k, new term(coeff, temp.getExponent()));
+                this.polynomialR.set(k, new term(coeff, temp.getExponent()));
                 ++k;
             }
         } catch (Exception e) {
             System.out.println("Error");
             System.exit(0);
         }
-        return toTerms(polynomialR);
+        return toTerms(this.polynomialR);
     }
 
     public static void main(String[] args) {
@@ -747,7 +747,6 @@ public class PolynomialSolver implements IPolynomialSolver{
                         poly1 = sc.nextLine().charAt(0);
                         poly2 = sc.nextLine().charAt(0);
                         PS.subtract(poly1, poly2);
-                        System.out.println(PS.print('R'));
                         break;
                     case "mult":
                         poly1 = sc.nextLine().charAt(0);
