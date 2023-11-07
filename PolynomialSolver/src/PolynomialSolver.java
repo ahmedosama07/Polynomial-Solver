@@ -396,7 +396,7 @@ class  term {
      * sets term coefficient
      * @param newCoefficient
      */
-    public void setElement(int newCoefficient)
+    public void setCoefficient(int newCoefficient)
     {
         this.coefficient = newCoefficient;
     }
@@ -404,7 +404,7 @@ class  term {
      * sets term exponent
      * @param newExponent
      */
-    public void setNext(int newExponent)
+    public void setExponent(int newExponent)
     {
         this.exponent = newExponent;
     }
@@ -699,67 +699,16 @@ public class PolynomialSolver implements IPolynomialSolver{
 
     public int[][] subtract(char poly1, char poly2)
     {
-        SingleLinkedList polynomial1 = selectPolynomial(poly1);
         SingleLinkedList polynomial2 = selectPolynomial(poly2);
-        if (polynomial1.isEmpty() || polynomial2.isEmpty()) 
-        {
-            System.out.println("Error");
-            System.exit(0);
-        }
+        term t;
         if (!polynomialR.isEmpty()) polynomialR.clear();
-        try {
-            int i = 0;
-            int j = 0;
-            term t1;
-            term t2;
-            while (i < polynomial1.size() && j < polynomial2.size())
-            {
-                t1 = (term)polynomial1.getNode(i).getElement();
-                t2 = (term)polynomial2.getNode(j).getElement();
-
-                if (t1.getExponent() == t2.getExponent())
-                {
-                    polynomialR.add(new term(t1.getCoefficient() - t2.getCoefficient(), t1.getExponent()));
-                    ++i;
-                    ++j;
-                }
-                else if (t1.getExponent() > t2.getExponent())
-                {
-                    polynomialR.add(new term(t1.getCoefficient(), t1.getExponent()));
-                    ++i;
-                }
-                else
-                {
-                    polynomialR.add(new term(-t2.getCoefficient(), t2.getExponent()));
-                    ++j;
-                }
-
-                if (polynomial1.getNode(i) == null)
-                {
-                    while (polynomial2.getNode(j) != null)
-                    {
-                        t2 = (term)polynomial2.getNode(j).getElement();
-                        polynomialR.add(new term(-t2.getCoefficient(), t2.getExponent()));
-                        ++j;
-                    }
-                }
-                if (polynomial2.getNode(j) == null)
-                {
-                    while (polynomial1.getNode(i) != null)
-                    {
-                        t1 = (term)polynomial1.getNode(i).getElement();
-                        polynomialR.add(new term(t1.getCoefficient(), t1.getExponent()));
-                        ++i;
-                    }
-                }
-            }
-            System.out.println(printResult());
-        } catch (Exception e) {
-            //throw e;
-            System.out.println("Error");
-            System.exit(0);
+        for (int i = 0; i < polynomial2.size(); ++i)
+        {
+            t = (term) polynomial2.getNode(i).getElement();
+            t.setCoefficient(-t.getCoefficient());
         }
-        return toTerms(polynomialR);
+        print(poly2);
+        return add(poly1, poly2);
     }
 
     public int[][] multiply(char poly1, char poly2)
