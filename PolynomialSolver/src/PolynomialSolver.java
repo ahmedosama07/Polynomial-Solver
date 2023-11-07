@@ -667,8 +667,6 @@ public class PolynomialSolver implements IPolynomialSolver{
                     polynomialR.add(new term(t2.getCoefficient(), t2.getExponent()));
                     ++j;
                 }
-                //System.out.println(polynomial1.getNode(i));
-                //System.out.println(polynomial2.getNode(j));
                 if (polynomial1.getNode(i) == null)
                 {
                     while (polynomial2.getNode(j) != null)
