@@ -453,12 +453,11 @@ public class PolynomialSolver implements IPolynomialSolver{
         int[][] terms = new int[polynomial.size()][2];
         try {
             term t;
-            int i = 0;
-            while (i < polynomial.size()) {
+            for (int i = 0; i < polynomial.size(); ++i)
+            {
                 t = (term) polynomial.getNode(i).getElement();
                 terms[i][0] = t.getCoefficient();
                 terms[i][1] = t.getExponent();
-                ++i;
             }
         } catch (Exception e) {
             System.out.println("Error");
@@ -483,7 +482,7 @@ public class PolynomialSolver implements IPolynomialSolver{
         }
     }
 
- public String print(char poly) {
+    public String print(char poly) {
     SingleLinkedList polynomial;
     SLNode p;
     term t;
@@ -496,10 +495,10 @@ public class PolynomialSolver implements IPolynomialSolver{
         System.exit(0);
         return "Error";
     }
-    int i = 0;
     boolean isBegin = true;
     try {
-        while (i < polynomial.size()) {
+        for(int i = 0; i < polynomial.size(); ++i)
+        {
             p = polynomial.getNode(i);
             t = (term) p.getElement();
             res = res + ((t.getCoefficient() > 0 && !isBegin) ? ((t.getCoefficient() > 0) ? "+" : "") : "")
@@ -508,7 +507,6 @@ public class PolynomialSolver implements IPolynomialSolver{
                       + ((t.getExponent() >= 2) ? ("x^" + (t.getExponent())) : ((t.getExponent() == 1) ? ("x") : (""))) : "");
             if (t.getCoefficient() != 0)
                 isBegin = false;
-            ++i;
         }
     } catch (Exception e) {
         System.out.print("Error");
@@ -639,15 +637,12 @@ public class PolynomialSolver implements IPolynomialSolver{
         term t1;
         term t2;
         term temp;
-        int i = 0;
-        int j = 0;
         int maxExponent = 0;
-        int k = 0;
         try {
             if(!polynomial1.isEmpty() && !polynomial2.isEmpty())
             {
-                t1 = (term) polynomial1.getNode(i).getElement();
-                t2 = (term) polynomial2.getNode(j).getElement();
+                t1 = (term) polynomial1.getNode(0).getElement();
+                t2 = (term) polynomial2.getNode(0).getElement();
                 maxExponent = t1.getExponent() + t2.getExponent();
             }
             else
@@ -656,30 +651,27 @@ public class PolynomialSolver implements IPolynomialSolver{
                 System.exit(0);
             }
 
-            for (k = 0; k <= maxExponent; ++k)
+            for (int i = 0; i <= maxExponent; ++i)
             {
-                this.polynomialR.add(new term(0, maxExponent - k));
+                this.polynomialR.add(new term(0, maxExponent - i));
             }
-            k = 0;
-            while (k < this.polynomialR.size()) {
+            for (int k = 0; k < this.polynomialR.size(); ++k)
+            {
                 temp = (term) this.polynomialR.getNode(k).getElement();
                 int coeff = 0;
-                while (i < polynomial1.size()) {
+                for (int i = 0; i < polynomial1.size(); ++i)
+                {
                     t1 = (term) polynomial1.getNode(i).getElement();
-                    while (j < polynomial2.size()) {
+                    for (int j = 0; j < polynomial2.size(); ++j)
+                    {
                         t2 = (term) polynomial2.getNode(j).getElement();
                         if (temp.getExponent() == t1.getExponent() + t2.getExponent())
                         {
                             coeff += t1.getCoefficient() * t2.getCoefficient();
                         }
-                        ++j;
                     }
-                    j = 0;
-                    ++i;
                 }
-                i = 0;
                 this.polynomialR.set(k, new term(coeff, temp.getExponent()));
-                ++k;
             }
         } catch (Exception e) {
             System.out.println("Error");
