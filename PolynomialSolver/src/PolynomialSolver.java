@@ -1,8 +1,4 @@
-import java.io.*;
 import java.util.*;
-import java.text.*;
-import java.math.*;
-import java.util.regex.*;
 
 interface ILinkedList {
 /**
@@ -448,60 +444,12 @@ public class PolynomialSolver implements IPolynomialSolver{
 
     private String printResult()
     {
-        SingleLinkedList polynomial = polynomialR;
-        StringBuilder result = new StringBuilder();
-        term t;
-        if (polynomial == null || polynomial.isEmpty())
-        {
-            return "Error";
-        }
-        else
-        {
-            for (int i = 0; i < polynomial.size(); ++i)
-            {
-                t = (term)polynomial.getNode(i).getElement();
-                int coefficient = t.getCoefficient();
-                int exponent = t.getExponent();
-                if (i > 0 && coefficient > 0)
-                {
-                    result.append("+");
-                }
-
-                if (coefficient != 0)
-                {
-                    if (coefficient != 1 && coefficient != - 1)
-                    {
-                        result.append(coefficient);
-                    }
-                    else if (coefficient == -1)
-                    {
-                        result.append("-");
-                    }
-
-                    if(exponent != 0)
-                    {
-                        result.append("x");
-                        if (exponent != 1)
-                        {
-                            result.append("^").append(exponent);
-                        }
-                    }
-                    else if(exponent == 0 && (coefficient == 1 || coefficient == -1))
-                    {
-                        result.append(1);
-                    }
-                }
-            }
-        }
-        if (result.length() == 0)
-        {
-            result.append("0");
-        }
-        return result.toString();
+        return print('R');
     }
 
     private int[][] toTerms(SingleLinkedList polynomial)
     {
+        System.out.println(printResult());
         int[][] terms = new int[polynomial.size()][2];
         try {
             term t;
@@ -535,63 +483,39 @@ public class PolynomialSolver implements IPolynomialSolver{
         }
     }
 
-    public String print(char poly)
+ public String print(char poly) {
+    SingleLinkedList polynomial;
+    SLNode p;
+    term t;
+    if (poly == 'R') polynomial = polynomialR;
+    else polynomial = selectPolynomial(poly);
+    String res = "";
+    if (polynomial == null || polynomial.isEmpty())
     {
-        SingleLinkedList polynomial;
-        if (poly == 'R') polynomial = polynomialR;
-        else polynomial = selectPolynomial(poly);
-        StringBuilder result = new StringBuilder();
-        term t;
-        if (polynomial == null || polynomial.isEmpty())
-        {
-            System.out.println("Error");
-            System.exit(0);
-            return "Error";
-        }
-        else
-        {
-            for (int i = 0; i < polynomial.size(); ++i)
-            {
-                t = (term)polynomial.getNode(i).getElement();
-                int coefficient = t.getCoefficient();
-                int exponent = t.getExponent();
-                if (i > 0 && coefficient > 0)
-                {
-                    result.append("+");
-                }
-
-                if (coefficient != 0)
-                {
-                    if (coefficient != 1 && coefficient != - 1)
-                    {
-                        result.append(coefficient);
-                    }
-                    else if (coefficient == -1)
-                    {
-                        result.append("-");
-                    }
-
-                    if(exponent != 0)
-                    {
-                        result.append("x");
-                        if (exponent != 1)
-                        {
-                            result.append("^").append(exponent);
-                        }
-                    }
-                    else if(exponent == 0 && (coefficient == 1 || coefficient == -1))
-                    {
-                        result.append(1);
-                    }
-                }
-            }
-        }
-        if (result.length() == 0)
-        {
-            result.append("0");
-        }
-        return result.toString();
+        System.out.println("Error");
+        System.exit(0);
+        return "Error";
     }
+    int i = 0;
+    boolean isBegin = true;
+    try {
+        while (i < polynomial.size()) {
+            p = polynomial.getNode(i);
+            t = (term) p.getElement();
+            res = res + ((t.getCoefficient() > 0 && !isBegin) ? ((t.getCoefficient() > 0) ? "+" : "") : "")
+                      + ((t.getCoefficient() < 0) ? "-" : "")
+                      + ((t.getCoefficient() != 0) ? (((t.getCoefficient()) != 1 || t.getExponent() == 0) ? Math.abs(t.getCoefficient()) : "")
+                      + ((t.getExponent() >= 2) ? ("x^" + (t.getExponent())) : ((t.getExponent() == 1) ? ("x") : (""))) : "");
+            if (t.getCoefficient() != 0)
+                isBegin = false;
+            ++i;
+        }
+    } catch (Exception e) {
+        System.out.print("Error");
+        System.exit(0);
+    }
+    return res;
+}
 
     public void clearPolynomial(char poly)
     {
@@ -686,7 +610,6 @@ public class PolynomialSolver implements IPolynomialSolver{
                     }
                 }
             }
-            System.out.println(printResult());
         } catch (Exception e) {
             System.out.println(e);
             System.out.println("Error");
@@ -705,7 +628,6 @@ public class PolynomialSolver implements IPolynomialSolver{
             t = (term) polynomial2.getNode(i).getElement();
             t.setCoefficient(-t.getCoefficient());
         }
-        print(poly2);
         return add(poly1, poly2);
     }
 
@@ -759,7 +681,6 @@ public class PolynomialSolver implements IPolynomialSolver{
                 polynomialR.set(k, new term(coeff, temp.getExponent()));
                 ++k;
             }
-            System.out.println(printResult());
         } catch (Exception e) {
             System.out.println("Error");
             System.exit(0);
@@ -776,8 +697,6 @@ public class PolynomialSolver implements IPolynomialSolver{
                 String op = sc.nextLine();
                 char poly1;
                 char poly2;
-                Object r;
-                // System.out.println(op);
                 switch (op)
                 {
                     case "set":
@@ -795,7 +714,6 @@ public class PolynomialSolver implements IPolynomialSolver{
                             for(int i = 0; i < s.length; ++i)
                             {
                                 try {
-                                    //list.add(Integer.parseInt(s[i]));
                                     arr[i] = Integer.parseInt(s[i]);
                                 } catch (Exception e) {
                                     System.out.println("Error");
@@ -823,17 +741,18 @@ public class PolynomialSolver implements IPolynomialSolver{
                     case "add":
                         poly1 = sc.nextLine().charAt(0);
                         poly2 = sc.nextLine().charAt(0);
-                        r = PS.add(poly1, poly2);
+                        PS.add(poly1, poly2);
                         break;
                     case "sub":
                         poly1 = sc.nextLine().charAt(0);
                         poly2 = sc.nextLine().charAt(0);
-                        r = PS.subtract(poly1, poly2);
+                        PS.subtract(poly1, poly2);
+                        System.out.println(PS.print('R'));
                         break;
                     case "mult":
                         poly1 = sc.nextLine().charAt(0);
                         poly2 = sc.nextLine().charAt(0);
-                        r = PS.multiply(poly1, poly2);
+                        PS.multiply(poly1, poly2);
                         break;
                     case "clear":
                         poly1 = sc.nextLine().charAt(0);
