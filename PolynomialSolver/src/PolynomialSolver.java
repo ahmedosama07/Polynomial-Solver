@@ -495,18 +495,21 @@ public class PolynomialSolver implements IPolynomialSolver{
         System.exit(0);
         return "Error";
     }
-    boolean isBegin = true;
+    boolean isFirstTerm = true;
     try {
         for(int i = 0; i < polynomial.size(); ++i)
         {
             p = polynomial.getNode(i);
             t = (term) p.getElement();
-            res = res + ((t.getCoefficient() > 0 && !isBegin) ? ((t.getCoefficient() > 0) ? "+" : "") : "")
+            // adds + if coefficient is positive and term is not the first term
+            // adds - if coefficient is negative
+            // adds the coeffitient absolute value if it does not equal one or the exponent equals zero and adds x^ the exponent value if the exponent is non-zero
+            res = res + ((t.getCoefficient() > 0 && !isFirstTerm) ? ((t.getCoefficient() > 0) ? "+" : "") : "")
                       + ((t.getCoefficient() < 0) ? "-" : "")
                       + ((t.getCoefficient() != 0) ? (((t.getCoefficient()) != 1 || t.getExponent() == 0) ? Math.abs(t.getCoefficient()) : "")
                       + ((t.getExponent() >= 2) ? ("x^" + (t.getExponent())) : ((t.getExponent() == 1) ? ("x") : (""))) : "");
             if (t.getCoefficient() != 0)
-                isBegin = false;
+                isFirstTerm = false;
         }
     } catch (Exception e) {
         System.out.print("Error");
